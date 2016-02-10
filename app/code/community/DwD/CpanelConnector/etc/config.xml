@@ -12,7 +12,7 @@
 <config>
     <modules>
         <DwD_CpanelConnector>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </DwD_CpanelConnector>
     </modules>
     <global>
