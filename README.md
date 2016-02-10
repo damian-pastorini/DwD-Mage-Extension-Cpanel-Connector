@@ -29,7 +29,7 @@ In order to make the extension work you need a Cpanel Account with reseller priv
 
 ## Supported versions
 
-Magento 1.5 to 1.9.x.
+Magento 1.8 to 1.9.x.
 
 ##Support
 
