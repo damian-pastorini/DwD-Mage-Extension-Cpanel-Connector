@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * DwD-CpanelConnector - Magento Extension
+ *
+ * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
+ *
+ */
+-->
+<config>
+    <modules>
+        <DwD_CpanelConnector>
+            <version>0.1.1</version>
+        </DwD_CpanelConnector>
+    </modules>
+    <global>
+        <helpers>
+            <cpanel_connector>
+                <class>DwD_CpanelConnector_Helper</class>
+            </cpanel_connector>
+        </helpers>
+        <blocks>
+            <cpanel_connector>
+                <class>DwD_CpanelConnector_Block</class>
+            </cpanel_connector>
+        </blocks>
+        <models>
+            <cpanel_connector>
+                <class>DwD_CpanelConnector_Model</class>
+                <resourceModel>cpanel_connector_mysql4</resourceModel>
+            </cpanel_connector>
+            <cpanel_connector_mysql4>
+                <class>DwD_CpanelConnector_Model_Mysql4</class>
+                <entities>
+                    <account>
+                        <table>cpanel_accounts</table>
+                    </account>
+                </entities>
+            </cpanel_connector_mysql4>
+        </models>
+        <resources>
+            <cpanel_connector_setup>
+                <setup>
+                    <module>DwD_CpanelConnector</module>
+                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </cpanel_connector_setup>
+            <cpanel_connector_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </cpanel_connector_write>
+            <cpanel_connector_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </cpanel_connector_read>
+        </resources>
+        <events>
+            <checkout_cart_save_before>
+                <observers>
+                    <cpanel_connector>
+                        <class>DwD_CpanelConnector_Model_Observer</class>
+                        <method>checkAddedItem</method>
+                    </cpanel_connector>
+                </observers>
+            </checkout_cart_save_before>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <cpanel_connector>
+                        <class>DwD_CpanelConnector_Model_Observer</class>
+                        <method>checkDomainAvailability</method>
+                    </cpanel_connector>
+                </observers>
+            </checkout_type_onepage_save_order>
+            <sales_invoice_item_save_after>
+                <observers>
+                    <cpanel_connector>
+                        <class>DwD_CpanelConnector_Model_Observer</class>
+                        <method>createCpanelAccount</method>
+                    </cpanel_connector>
+                </observers>
+            </sales_invoice_item_save_after>
+        </events>
+        <template>
+            <email>
+                <cpanel_account_created module="cpanel_connector">
+                    <label>cPanel Account Created</label>
+                    <file>cpanel_connector_account_created.html</file>
+                    <type>html</type>
+                </cpanel_account_created>
+            </email>
+        </template>
+    </global>
+    <default>
+        <cpanel_connector>
+            <frontend_config>
+                <main_domain_label>Main Domain</main_domain_label>
+            </frontend_config>
+            <sales>
+                <create_account_automatically>0</create_account_automatically>
+            </sales>
+            <emails>
+                <cpanel_account_created_automatically>1</cpanel_account_created_automatically>
+                <sender_name>Administrator</sender_name>
+                <subject>Account Created Successfully!</subject>
+            </emails>
+        </cpanel_connector>
+    </default>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <cpanel_connector before="Mage_Adminhtml">DwD_CpanelConnector_Adminhtml</cpanel_connector>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <cpanel_connector>
+                    <file>dwd_cpanel_connector.xml</file>
+                </cpanel_connector>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

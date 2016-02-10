@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ *
+ * DwD-CpanelConnector - Magento Extension
+ *
+ * @copyright Copyright (c) 2014 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
+ *
+ */
+-->
+<config>
+    <modules>
+        <DwD_CpanelConnector>
+            <active>true</active>
+            <codePool>community</codePool>
+        </DwD_CpanelConnector>
+    </modules>
+</config>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * DwD-CpanelConnector - Magento Extension
+ *
+ * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
+ *
+ */
+-->
+<config>
+    <menu>
+        <cpanel_connector>
+            <title>cPanel Connector</title>
+            <sort_order>72</sort_order>
+            <children>
+                <cpanel_connector_accounts>
+                    <title>Manage Accounts</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/cpanel_accounts</action>
+                </cpanel_connector_accounts>
+                <cpanel_connector_settings>
+                    <title>Settings</title>
+                    <sort_order>2</sort_order>
+                    <action>adminhtml/system_config/edit/section/cpanel_connector</action>
+                </cpanel_connector_settings>
+            </children>
+        </cpanel_connector>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <cpanel_connector translate="title" module="cpanel_connector">
+                                        <title>DwD Extensions - cPanel Connector</title>
+                                        <sort_order>50</sort_order>
+                                    </cpanel_connector>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
