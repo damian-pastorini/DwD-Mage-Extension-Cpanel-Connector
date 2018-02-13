@@ -4,14 +4,21 @@
  *
  * DwD-CpanelConnector - Magento Extension
  *
- * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @copyright Copyright (c) 2017 DwDeveloper (http://www.dwdeveloper.com/)
  * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
  *
  */
 
+/**
+ * Class DwD_CpanelConnector_Helper_Form_Fields
+ */
 class DwD_CpanelConnector_Helper_Form_Fields extends Mage_Core_Helper_Abstract
 {
 
+    /**
+     * @param bool $userEdition
+     * @return array
+     */
     public function getCpanelFieldsConfig($userEdition = false)
     {
         $yesNo = Mage::getModel('adminhtml/system_config_source_yesno')->toOptionArray();

@@ -4,14 +4,20 @@
  *
  * DwD-CpanelConnector - Magento Extension
  *
- * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @copyright Copyright (c) 2017 DwDeveloper (http://www.dwdeveloper.com/)
  * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
  *
  */
 
+/**
+ * Class DwD_CpanelConnector_Model_Observer
+ */
 class DwD_CpanelConnector_Model_Observer
 {
 
+    /**
+     * @param $observer
+     */
     public function checkAddedItem($observer)
     {
         $isEnabled = $this->getConfig('general/enabled');
@@ -44,6 +50,9 @@ class DwD_CpanelConnector_Model_Observer
         }
     }
 
+    /**
+     * @param $observer
+     */
     public function checkDomainAvailability($observer)
     {
         $isEnabled = $this->getConfig('general/enabled');
@@ -62,6 +71,9 @@ class DwD_CpanelConnector_Model_Observer
         }
     }
 
+    /**
+     * @param $observer
+     */
     public function createCpanelAccount($observer)
     {
         $isEnabled = $this->getConfig('general/enabled');
@@ -127,6 +139,10 @@ class DwD_CpanelConnector_Model_Observer
         }
     }
 
+    /**
+     * @param $domain
+     * @return string
+     */
     public function generateAccountName($domain)
     {
         // clean domain:
@@ -137,6 +153,10 @@ class DwD_CpanelConnector_Model_Observer
         return 'cp'.$accountName;
     }
 
+    /**
+     * @param $domain
+     * @return bool
+     */
     public function isValidDomain($domain)
     {
         $result = true;
@@ -147,6 +167,10 @@ class DwD_CpanelConnector_Model_Observer
         return $result;
     }
 
+    /**
+     * @param $domain
+     * @return bool
+     */
     public function isAvailableDomain($domain)
     {
         $result = false;
@@ -163,6 +187,10 @@ class DwD_CpanelConnector_Model_Observer
         return $result;
     }
 
+    /**
+     * @param $email
+     * @return string
+     */
     public function generatePassword($email)
     {
         $password = crypt($email, 'DW');
@@ -170,6 +198,10 @@ class DwD_CpanelConnector_Model_Observer
         return $password;
     }
 
+    /**
+     * @param $path
+     * @return mixed
+     */
     public function getConfig($path)
     {
         return Mage::getStoreConfig('cpanel_connector/'.$path);

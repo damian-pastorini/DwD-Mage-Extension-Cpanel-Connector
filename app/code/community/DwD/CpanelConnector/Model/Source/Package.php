@@ -4,11 +4,14 @@
  *
  * DwD-CpanelConnector - Magento Extension
  *
- * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @copyright Copyright (c) 2017 DwDeveloper (http://www.dwdeveloper.com/)
  * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
  *
  */
 
+/**
+ * Class DwD_CpanelConnector_Model_Source_Package
+ */
 class DwD_CpanelConnector_Model_Source_Package extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
 {
 
@@ -21,9 +24,17 @@ class DwD_CpanelConnector_Model_Source_Package extends Mage_Eav_Model_Entity_Att
         $this->_packagesList = $api->getPackagesList();
 	}
 
+	public function getHelper()
+    {
+        return Mage::helper('cpanel_connector');
+    }
+
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
-        $result = array('0' => Mage::helper('cpanel_connector')->__('Select a package...'));
+        $result = array('0' => $this->getHelper()->__('Select a package...'));
         if($this->_packagesList) {
             foreach ($this->_packagesList as $package) {
                 $packageId = str_replace(' ', '', strtolower($package['name']));
@@ -33,10 +44,13 @@ class DwD_CpanelConnector_Model_Source_Package extends Mage_Eav_Model_Entity_Att
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function getAllOptions()
     {
         if (!$this->_options) {
-            $emptyOption = Mage::helper('cpanel_connector')->__('Select a package...');
+            $emptyOption = $this->getHelper()->__('Select a package...');
             $options = array($emptyOption);
             if($this->_packagesList) {
                 foreach ($this->_packagesList as $package) {

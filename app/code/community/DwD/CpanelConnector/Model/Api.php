@@ -4,13 +4,16 @@
  *
  * DwD-CpanelConnector - Magento Extension
  *
- * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @copyright Copyright (c) 2017 DwDeveloper (http://www.dwdeveloper.com/)
  * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
  *
  */
 
 require_once(Mage::getBaseDir().'/lib/DwD/Cpanel/Api.php');
 
+/**
+ * Class DwD_CpanelConnector_Model_Api
+ */
 class DwD_CpanelConnector_Model_Api
 {
 
@@ -72,6 +75,10 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $packageCode
+     * @return bool|mixed
+     */
     public function getPackageName($packageCode)
     {
         $result = false;
@@ -83,6 +90,10 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $accountData
+     * @return bool|mixed
+     */
     public function getAccountAdminEmail($accountData)
     {
         $result = $this->defaultAdminContact;
@@ -92,6 +103,10 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $accountData
+     * @return bool|mixed
+     */
     public function getAccountPackage($accountData)
     {
         $packageCode = $this->defaultAdminContact;
@@ -102,6 +117,9 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @return bool
+     */
     public function getAccountsList()
     {
         $result = false;
@@ -115,6 +133,10 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $accountName
+     * @return bool
+     */
     public function getAccount($accountName)
     {
         $api = $this->getApi();
@@ -128,6 +150,11 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $accountName
+     * @param $accountData
+     * @return bool
+     */
     public function saveAccount($accountName, $accountData)
     {
         $api = $this->getApi();
@@ -154,6 +181,10 @@ class DwD_CpanelConnector_Model_Api
         return $result;
     }
 
+    /**
+     * @param $accountName
+     * @return bool
+     */
     public function deleteAccount($accountName)
     {
         $api = $this->getApi();

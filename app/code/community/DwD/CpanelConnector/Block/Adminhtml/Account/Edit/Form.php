@@ -4,59 +4,83 @@
  *
  * DwD-CpanelConnector - Magento Extension
  *
- * @copyright Copyright (c) 2015 DwDesigner Inc. (http://www.dwdeveloper.com/)
+ * @copyright Copyright (c) 2017 DwDeveloper (http://www.dwdeveloper.com/)
  * @author Damian A. Pastorini - damian.pastorini@dwdeveloper.com
  *
  */
 
+/**
+ * Class DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form
+ */
 class DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
 
+    protected $api = false;
+
+    /**
+     * DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->setId('account_form');
-        $this->setTitle(Mage::helper('cpanel_connector')->__('Account Information'));
+        $this->setTitle($this->__('Account Information'));
     }
 
+    /**
+     * @return bool|false|Mage_Core_Model_Abstract
+     */
+    public function getApi()
+    {
+        if(!$this->api) {
+            $this->api = Mage::getModel('cpanel_connector/api');
+        }
+        return $this->api;
+    }
+
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array('id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post'));
-        $fieldset = $form->addFieldset('account_form',array('legend'=>Mage::helper('cpanel_connector')->__('General')));
+        $form = $this->createForm();
+        $fieldset = $form->addFieldset('account_form', array('legend' => $this->__('General')));
         $serverData = false;
         $registryData = Mage::registry('account_data');
-        $helper = Mage::helper('cpanel_connector/form_fields');
+        $helper = $this->getFieldsHelper();
         $disabled = true;
         if ($registryData) {
-            $api = Mage::getModel('cpanel_connector/api');
+            $api = $this->getApi();
             $cpanelUser = $registryData->getCpanelUser();
             $cpanelData = $api->getAccount($cpanelUser);
             $cpanelData['package'] = str_replace(' ', '', strtolower($cpanelData['plan']));
-            $cpanelData['magento_user_email'] = Mage::getModel('customer/customer')->load($registryData->getMagentoUserId())->getEmail();
+            $customerId = $registryData->getMagentoUserId();
+            $customer = $this->loadCustomerById($customerId);
+            if($customer->getId()) {
+                $cpanelData['magento_user_email'] = $customer->getEmail();
+            }
             $cpanelData['is_edit'] = 1;
             $serverData = array_merge($registryData->getData(), $cpanelData);
-            $fieldset->addField('is_edit', 'hidden', array(
-                'name' => 'is_edit',
-            ));
+            $fieldset->addField('is_edit', 'hidden', array('name' => 'is_edit'));
         } else {
             $disabled = false;
         }
         $fieldsConfigDataArray = $helper->getCpanelFieldsConfig($disabled);
         $fieldset->addField('magento_user_email', 'text', array(
-            'label' => Mage::helper('cpanel_connector')->__('Magento User E-mail'),
+            'label' => $this->__('Magento User E-mail'),
             'class' => 'required-entry',
             'required' => true,
             'name' => 'magento_user_email',
             'disabled' => $disabled
         ));
         if (!$registryData) {
-            if (Mage::app()->isSingleStoreMode()) {
+            if ($this->isSingleStoreMode()) {
                 $fieldset->addField('website_id', 'hidden', array('name' => 'website_id'));
-                $websiteId = Mage::app()->getStore(true)->getWebsiteId();
+                $websiteId = $this->getWebsiteId();
                 $serverData = array('website_id' => $websiteId);
             } else {
                 $websites = array();
-                foreach (Mage::app()->getWebsites(true) as $website) {
+                foreach ($this->getWebsites() as $website) {
                     $websites[$website->getId()] = !is_null($website->getDefaultStore());
                 }
                 $prefix = $form->getHtmlIdPrefix();
@@ -66,7 +90,7 @@ class DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form extends Mage_Adminht
                 var {$prefix}_websites = " . Mage::helper('core')->jsonEncode($websites) .";
                 Validation.add(
                     'validate-website-has-store',
-                    '" . Mage::helper('customer')->__('Please select a website which contains store view') . "',
+                    '" . $this->__('Please select a website which contains store view') . "',
                     function(v, elem){
                         return {$prefix}_websites[elem.value] == true;
                     }
@@ -87,14 +111,14 @@ class DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form extends Mage_Adminht
                 $form->getElement('website_id')->setRenderer($renderer);
             }
             $fieldset->addField('password', 'text', array(
-                'label' => Mage::helper('cpanel_connector')->__('cPanel Account Password'),
+                'label' => $this->__('cPanel Account Password'),
                 'class' => 'required-entry',
                 'required' => true,
                 'name' => 'password',
             ));
         }
         $fieldset->addField('cpanel_user', 'text', array(
-            'label' => Mage::helper('cpanel_connector')->__('cPanel User'),
+            'label' => $this->__('cPanel User'),
             'class' => 'required-entry',
             'required' => true,
             'name' => 'cpanel_user',
@@ -121,6 +145,71 @@ class DwD_CpanelConnector_Block_Adminhtml_Account_Edit_Form extends Mage_Adminht
         $form->setUseContainer(true);
         $this->setForm($form);
         return parent::_prepareForm();
+    }
+
+    /**
+     * @return Varien_Data_Form
+     */
+    protected function createForm()
+    {
+        $formData = array(
+            'id' => 'edit_form',
+            'action' => $this->getData('action'),
+            'method' => 'post'
+        );
+        $form = new Varien_Data_Form($formData);
+        return $form;
+    }
+
+    /**
+     * @return Mage_Core_Helper_Abstract
+     */
+    public function getFieldsHelper()
+    {
+        return Mage::helper('cpanel_connector/form_fields');
+    }
+
+    /**
+     * @return false|Mage_Core_Model_Abstract
+     */
+    public function getCustomerModel()
+    {
+        return Mage::getModel('customer/customer');
+    }
+
+    /**
+     * @param $customerId
+     * @return false|Mage_Core_Model_Abstract
+     */
+    public function loadCustomerById($customerId)
+    {
+        $customerModel = $this->getCustomerModel();
+        $customerModel->load($customerId);
+        return $customerModel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSingleStoreMode()
+    {
+        return Mage::app()->isSingleStoreMode();
+    }
+
+    /**
+     * @return int|null|string
+     */
+    public function getWebsiteId()
+    {
+        return Mage::app()->getStore(true)->getWebsiteId();
+    }
+
+    /**
+     * @return array
+     */
+    public function getWebsites()
+    {
+        return Mage::app()->getWebsites(true);
     }
 
 }
